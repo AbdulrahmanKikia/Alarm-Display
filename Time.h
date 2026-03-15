@@ -5,10 +5,11 @@ private:
 	int seconds;
 	int minutes;
 	int hours;
+	bool format24; // true for 24-hour format, false for 12-hour format
 public:
 	Time();
 	Time(int, int, int);
-	Time(Time&);
+	Time(const Time&);
 	~Time();
 
 	int getSeconds() const;
@@ -21,18 +22,19 @@ public:
 	void setTime(int, int, int);
 	void setTimeFormat24(bool);
 
-	bool isTime(Time &t) const; // To be replaced with operator override
+	bool isTime(const Time &t) const; // To be replaced with operator override
 	void incrementSeconds(int);
 	void incrementMinutes(int);
 	void incrementHours(int);
 	void incrementTime(int, int, int);
-	Time timeDifference(Time&) const;
-	bool timeFormat24();
+	Time timeDifference(const Time&) const;
+	bool isTimeFormat24() const;
 
 	void printTime() const;
 	void printTimeInSeconds() const;
 	void printTimeInMinutes() const;
 	void printTimeInHours() const;
 	void printTimeInDays() const;
-	void printTimeDifference(Time&) const;
+	void printTimeDifference(const Time&) const;
+	
 };

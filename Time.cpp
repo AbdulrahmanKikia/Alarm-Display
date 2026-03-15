@@ -1,21 +1,35 @@
 #include "Time.h"
+#include <iostream>
+#include <cstdlib> // for abs
 
 Time::Time() {
 	seconds = 0;
-	minites = 0;
+    minutes = 0;
 	hours = 0;
+	format24 = true;
 }
 
 Time::Time(int sec, int min, int h) {
-	seconds = sec;
-	minutes = min;
-	hours = h;
+	if (sec < 0 || sec > 59 || min < 0 || min > 59 || h < 0 || h > 24) {
+		std::cerr << "Invalid time provided. Setting to default (00:00:00)." << std::endl;
+		seconds = 0;
+		minutes = 0;
+		hours = 0;
+	}
+
+	else {
+		seconds = sec;
+		minutes = min;
+		hours = h;
+		format24 = true;
+	}
 }
 
-Time::Time(Time& t) {
-	seconds = t.seconds;
-	minutes = t.minutes;
-	hours = t.hours;
+Time::Time(const Time& t) {
+	seconds = t.getSeconds();
+	minutes = t.getMinutes();
+	hours = t.getHours();
+    format24 = t.isTimeFormat24();
 }
 
 Time::~Time(){}
@@ -31,12 +45,24 @@ int Time::getHours() const{
 }
 
 void Time::setSeconds(int sec) {
+	if (sec < 0 || sec > 59) {
+		std::cerr << "Invalid seconds value. Must be between 0 and 59." << std::endl;
+		return;
+	}
 	seconds = sec;
 }
 void Time::setMinutes(int min) {
+	if (min < 0 || min > 59) {
+		std::cerr << "Invalid minutes value. Must be between 0 and 59." << std::endl;
+		return;
+	}
 	minutes = min;
 }
 void Time::setHours(int h) {
+	if (h < 0 || h > 24) {
+		std::cerr << "Invalid hours value. Must be between 0 and 24." << std::endl;
+		return;
+	}
 	hours = h;
 }
 void Time::setTime(int sec, int min, int h) {
@@ -45,7 +71,7 @@ void Time::setTime(int sec, int min, int h) {
 	setHours(h);
 }
 
-bool Time::isTime(Time& t) const{
+bool Time::isTime(const Time& t) const{
 	if (seconds == t.seconds && minutes == t.minutes && hours == t.hours) {
 		return true;
 	}
@@ -54,25 +80,32 @@ bool Time::isTime(Time& t) const{
 	}
 }
 
-bool Time::timeFormat24() {
-	if (hours >= 0 && hours < 24) {
-		return true;
-	}
-	else {
-		return false;
-	}
+bool Time::isTimeFormat24() const{
+	return format24;
 }
 
 void Time::setTimeFormat24(bool is24) {
-	timeFormat
+	format24 = is24;
 }
 
 void Time::incrementSeconds(int sec) {
 	seconds += sec;
+	if (seconds >= 60) {
+		minutes += seconds / 60;
+		seconds = seconds % 60;
+	}
+	if (minutes >= 60) {
+		hours += minutes / 60;
+		minutes = minutes % 60;
+	}
 }
 
 void Time::incrementMinutes(int min) {
 	minutes += min;
+	if (minutes >= 60) {
+		hours += minutes / 60;
+		minutes = minutes % 60;
+	}
 }
 
 void Time::incrementHours(int h) {
@@ -85,14 +118,46 @@ void Time::incrementTime(int sec, int min, int h) {
 	incrementHours(h);
 }
 
-Time Time::timeDifference(Time& t) const {
-	Time diff();
-	diff.setSeconds(abs(seconds - t.seconds));
-	diff.setMinutes(abs(minutes - t.minutes));
-	diff.setHours(abs(hours - t.hours));
+Time Time::timeDifference(const Time& t) const {
+    Time diff;
+	diff.setSeconds(std::abs(seconds - t.seconds));
+	diff.setMinutes(std::abs(minutes - t.minutes));
+	diff.setHours(std::abs(hours - t.hours));
 	return diff;
 }
 
 void Time::printTime() const {
-	std::cout << hours << ":" << minutes << ":" << seconds << std::endl;
+    if (format24)
+	{
+		std::cout << hours << ":" << minutes << ":" << seconds << std::endl;
+	}
+	else {
+		if (hours > 12) {
+			std::cout << (hours - 12) << ":" << minutes << ":" << seconds << " PM" << std::endl;
+		}
+		else {
+			std::cout << hours << ":" << minutes << ":" << seconds << " AM" << std::endl;
+		}
+	}
 }
+
+void Time::printTimeInSeconds() const {
+	std::cout << "Time in seconds: " << (hours * 3600) + (minutes * 60) + seconds << std::endl;
+}
+
+void Time::printTimeInMinutes() const {
+	std::cout << "Time in minutes: " << (hours * 60) + minutes + (seconds / 60) << std::endl;
+}
+
+void Time::printTimeInHours() const {
+	std::cout << "Time in hours: " << hours + (minutes / 60) + (seconds / 3600) << std::endl;
+}
+
+void Time::printTimeInDays() const {
+	std::cout << "Time in days: " << (hours / 24) + (minutes / 1440) + (seconds / 86400) << std::endl;
+}
+
+void Time::printTimeDifference(const Time& t) const {
+	Time diff = timeDifference(t);
+	std::cout << "Time difference: " << diff.hours << " hours, " << diff.minutes << " minutes, " << diff.seconds << " seconds" << std::endl;
+}	
