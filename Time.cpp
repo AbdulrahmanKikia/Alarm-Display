@@ -118,27 +118,29 @@ void Time::incrementTime(int sec, int min, int h) {
 	incrementHours(h);
 }
 
+// Helper method to convert to total seconds
+int Time::getTotalSeconds() const {
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
+// Better timeDifference using seconds
 Time Time::timeDifference(const Time& t) const {
-    Time diff;
-	diff.setSeconds(std::abs(seconds - t.seconds));
-	diff.setMinutes(std::abs(minutes - t.minutes));
-	diff.setHours(std::abs(hours - t.hours));
-	return diff;
+    int diff = std::abs(getTotalSeconds() - t.getTotalSeconds());
+    Time result;
+    result.hours = diff / 3600;
+    result.minutes = (diff % 3600) / 60;
+    result.seconds = diff % 60;
+    return result;
 }
 
 void Time::printTime() const {
-    if (format24)
-	{
-		std::cout << hours << ":" << minutes << ":" << seconds << std::endl;
-	}
-	else {
-		if (hours > 12) {
-			std::cout << (hours - 12) << ":" << minutes << ":" << seconds << " PM" << std::endl;
-		}
-		else {
-			std::cout << hours << ":" << minutes << ":" << seconds << " AM" << std::endl;
-		}
-	}
+    if (format24) {
+        printf("%02d:%02d:%02d\n", hours, minutes, seconds); // Zero-padded
+    } else {
+        int displayHours = hours == 0 ? 12 : (hours > 12 ? hours - 12 : hours);
+        const char* period = hours < 12 ? "AM" : "PM";
+        printf("%02d:%02d:%02d %s\n", displayHours, minutes, seconds, period);
+    }
 }
 
 void Time::printTimeInSeconds() const {
@@ -160,4 +162,4 @@ void Time::printTimeInDays() const {
 void Time::printTimeDifference(const Time& t) const {
 	Time diff = timeDifference(t);
 	std::cout << "Time difference: " << diff.hours << " hours, " << diff.minutes << " minutes, " << diff.seconds << " seconds" << std::endl;
-}	
+}

@@ -15,6 +15,7 @@ public:
 	int getSeconds() const;
 	int getMinutes() const;
 	int getHours() const;
+	int getTotalSeconds() const;
 
 	void setSeconds(int);
 	void setMinutes(int);
@@ -36,5 +37,4 @@ public:
 	void printTimeInHours() const;
 	void printTimeInDays() const;
 	void printTimeDifference(const Time&) const;
-	
 };
