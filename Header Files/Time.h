@@ -30,6 +30,7 @@ public:
 	void incrementHours(int);
 	void incrementTime(int, int, int);
 	Time timeDifference(const Time&) const;
+	Time operator-(const Time&) const;
 	bool isTimeFormat24() const;
 
 	void printTime() const;

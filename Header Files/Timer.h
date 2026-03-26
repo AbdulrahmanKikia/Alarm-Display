@@ -5,6 +5,7 @@
 
 class Timer {
     private:
+        Time startTime; // The time when the timer was started
         Time countdownTime;
         bool running;
     public:
@@ -15,14 +16,15 @@ class Timer {
         ~Timer();
 
         Time getCountdownTime() const;
+        Time getStartTime() const;
         bool isRunning() const;
-        Time getTimeRemaining() const;
+        Time getTimeRemaining(const Time&) const;
 
-        void start();
+        void start(const Time&);
         void stop();
         void reset();
         void decrementTime(int sec, int min, int h);
 
-        void printTimer() const;
+        void printTimer(const Time&) const;
 };
 #endif // TIMER_H

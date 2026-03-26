@@ -163,3 +163,15 @@ void Time::printTimeDifference(const Time& t) const {
 	Time diff = timeDifference(t);
 	std::cout << "Time difference: " << diff.hours << " hours, " << diff.minutes << " minutes, " << diff.seconds << " seconds" << std::endl;
 }
+
+Time Time::operator-(const Time& other) const {
+    int diff = getTotalSeconds() - other.getTotalSeconds();
+    if (diff < 0) {
+        return Time(0, 0, 0);
+    }
+    Time result;
+    result.seconds = diff % 60;
+    result.minutes = (diff / 60) % 60;
+    result.hours = diff / 3600;
+    return result;
+}
