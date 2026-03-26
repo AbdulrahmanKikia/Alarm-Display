@@ -6,8 +6,8 @@ Alarm::Alarm() {
     isSet = false;
     reoccurring = false;
 }
-Alarm::Alarm(int sec, int min, int h) {
-    alarmTime = Time(sec, min, h);
+Alarm::Alarm(int h, int m, int s) {
+    alarmTime = Time(s, m, h);
     isSet = true;
     reoccurring = false;
 }
@@ -33,8 +33,8 @@ bool Alarm::getReoccurring() const {
     return reoccurring;
 }
 
-void Alarm::setAlarmTime(int sec, int min, int h) {
-    alarmTime.setTime(sec, min, h);
+void Alarm::setAlarmTime(int h, int m, int s) {
+    alarmTime.setTime(s, m, h);
 }
 void Alarm::setIsSet(bool set) {
     isSet = set;
