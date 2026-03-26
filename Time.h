@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TIME_H
+#define TIME_H	
 
 class Time {
 private:
@@ -38,3 +39,5 @@ public:
 	void printTimeInDays() const;
 	void printTimeDifference(const Time&) const;
 };
+
+#endif // TIME_H
